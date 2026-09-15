@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+.venv-tts/
+.cache/
+dist/
+build/
+outputs/
+.env
+:memory:.ses

@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "duplexforge"
+version = "0.1.0"
+description = "Goal-to-audio dataset generator for full-duplex spoken dialogue"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "DuplexForge contributors" }]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/yoospeech/duplexforge"
+Repository = "https://github.com/yoospeech/duplexforge"
+
+[project.optional-dependencies]
+edge = ["edge-tts>=7.0"]
+qwen3-tts = ["qwen-tts"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+duplexforge = "duplexforge.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
