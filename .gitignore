@@ -4,18 +4,13 @@ __pycache__/
 .pytest_cache/
 .venv/
 .venv-tts/
-<<<<<<< HEAD
 .venv-moshi/
 third_party/
-=======
->>>>>>> origin/main
 .cache/
 dist/
 build/
 outputs/
-<<<<<<< HEAD
 runs/
-=======
->>>>>>> origin/main
+models/
 .env
 :memory:.ses

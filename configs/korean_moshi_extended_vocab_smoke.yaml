@@ -1,0 +1,36 @@
+# One-step integration test for the Korean-extended 33,902-token Moshiko text vocabulary.
+data:
+  train_data: "outputs/korean_train/moshi.jsonl"
+  eval_data: ""
+  shuffle: false
+moshi_paths:
+  hf_repo_id: "kyutai/moshiko-pytorch-bf16"
+  tokenizer_path: "models/korean_moshiko_tokenizer/tokenizer_spm_ko_extended.model"
+  config_path: "models/korean_moshiko_tokenizer/lm_config.json"
+full_finetuning: false
+lora:
+  enable: true
+  rank: 8
+  scaling: 2.0
+  ft_embed: true
+  new_token_start: 32000
+first_codebook_weight_multiplier: 100.0
+text_padding_weight: 0.5
+duration_sec: 10
+batch_size: 1
+num_microbatches: 1
+max_steps: 1
+gradient_checkpointing: true
+optim:
+  lr: 2.0e-6
+  weight_decay: 0.1
+  pct_start: 0.05
+seed: 42
+log_freq: 1
+eval_freq: 0
+do_eval: false
+do_ckpt: false
+ckpt_freq: 0
+save_adapters: true
+run_dir: "runs/korean_moshi_extended_vocab_smoke"
+overwrite_run_dir: true

@@ -1,0 +1,85 @@
+diff --git a/finetune/args.py b/finetune/args.py
+index afd4406..4d2d9ce 100644
+--- a/finetune/args.py
++++ b/finetune/args.py
+@@ -13,6 +13,10 @@ class LoraArgs(Serializable):
+     rank: int = 64
+     scaling: float = 2.0
+     ft_embed: bool = False
++    # When extending a tokenizer, only rows at and after this ID are updated in
++    # text embeddings and text output projection. Existing Moshiko rows remain
++    # frozen so the base English behaviour is preserved.
++    new_token_start: int | None = None
+ 
+     def __post_init__(self) -> None:
+         if self.enable:
+diff --git a/finetune/wrapped_model.py b/finetune/wrapped_model.py
+index 8a7ec08..e106c00 100644
+--- a/finetune/wrapped_model.py
++++ b/finetune/wrapped_model.py
+@@ -19,6 +19,52 @@ from .distributed import get_rank, get_world_size
+ logger = logging.getLogger(__name__)
+ 
+ 
++def _expand_text_vocab_weights(model, state_dict: dict[str, torch.Tensor]) -> None:
++    """Pad pretrained text-vocabulary weights when a tokenizer adds IDs."""
++    targets = model.state_dict()
++    names = ("text_emb.weight", "depformer_text_emb.weight", "text_linear.weight")
++    for source_name in names:
++        if source_name not in state_dict:
++            continue
++        target_name = source_name
++        if target_name not in targets and source_name == "text_linear.weight":
++            target_name = "text_linear.frozen_W.weight"
++        if target_name not in targets:
++            continue
++        source = state_dict[source_name]
++        target = targets[target_name]
++        if tuple(source.shape) == tuple(target.shape):
++            continue
++        if source.ndim != target.ndim or source.shape[1:] != target.shape[1:] or source.shape[0] > target.shape[0]:
++            raise ValueError(f"incompatible vocabulary tensor {source_name}")
++        extra_shape = (target.shape[0] - source.shape[0], *source.shape[1:])
++        extra = torch.empty(extra_shape, dtype=source.dtype, device=source.device)
++        torch.nn.init.trunc_normal_(extra, mean=0.0, std=1 / math.sqrt(source.shape[-1]))
++        state_dict[source_name] = torch.cat((source, extra), dim=0)
++        logger.info("Expanded %s from %d to %d vocabulary rows", source_name, source.shape[0], target.shape[0])
++
++
++def _freeze_existing_vocab_rows(param: torch.nn.Parameter, start: int) -> None:
++    def mask_old_rows(grad: torch.Tensor) -> torch.Tensor:
++        grad = grad.clone()
++        grad[:start] = 0
++        return grad
++    param.register_hook(mask_old_rows)
++
++
+ def main_logger_info(message: str) -> None:
+     if get_rank() == 0:
+         logger.info(message)
+@@ -142,6 +188,8 @@ def get_fsdp_model(
+         for k, v in model_state_dict.items():
+             model_state_dict[k] = v.to(param_dtype)
+ 
++        _expand_text_vocab_weights(model, model_state_dict)
++
+         model.load_state_dict(model_state_dict, strict=False, assign=True)
+ 
+         if args.lora.enable and not args.full_finetuning:
+@@ -177,8 +225,20 @@ def get_fsdp_model(
+                 param.requires_grad = True
+             elif args.lora.ft_embed and "emb" in name:
+                 param.requires_grad = True
++            elif args.lora.new_token_start is not None and name == "text_linear.frozen_W.weight":
++                param.requires_grad = True
+             else:
+                 param.requires_grad = False
++            if (
++                param.requires_grad
++                and args.lora.new_token_start is not None
++                and name in {"text_emb.weight", "depformer_text_emb.weight", "text_linear.frozen_W.weight"}
++            ):
++                _freeze_existing_vocab_rows(param, args.lora.new_token_start)
+     else:
+         for param in model.parameters():
+             param.requires_grad = True

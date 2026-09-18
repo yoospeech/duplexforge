@@ -1,0 +1,35 @@
+# Korean tokenizer + new vocabulary row adaptation, followed by Moshi LoRA.
+data:
+  train_data: "outputs/korean_train/moshi.jsonl"
+  eval_data: "outputs/korean_eval/moshi.jsonl"
+  shuffle: true
+moshi_paths:
+  hf_repo_id: "kyutai/moshiko-pytorch-bf16"
+  tokenizer_path: "models/korean_moshiko_tokenizer/tokenizer_spm_ko_extended.model"
+  config_path: "models/korean_moshiko_tokenizer/lm_config.json"
+full_finetuning: false
+lora:
+  enable: true
+  rank: 128
+  scaling: 2.0
+  ft_embed: true
+  new_token_start: 32000
+first_codebook_weight_multiplier: 100.0
+text_padding_weight: 0.5
+duration_sec: 100
+batch_size: 1
+num_microbatches: 4
+max_steps: 2000
+gradient_checkpointing: true
+optim:
+  lr: 2.0e-6
+  weight_decay: 0.1
+  pct_start: 0.05
+seed: 42
+log_freq: 1
+eval_freq: 100
+do_eval: true
+do_ckpt: true
+ckpt_freq: 100
+save_adapters: true
+run_dir: "runs/korean_moshi_extended_vocab_lora"
