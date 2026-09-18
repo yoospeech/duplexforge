@@ -11,6 +11,7 @@ from typing import Protocol
 from .models import DialoguePlan, Event, Timing
 
 
+<<<<<<< HEAD
 PATTERNS = (
     "normal",
     "overlap",
@@ -19,6 +20,9 @@ PATTERNS = (
     "backchannel",
     "hesitation",
 )
+=======
+PATTERNS = ("normal", "backchannel", "interruption", "pause")
+>>>>>>> origin/main
 LANGUAGES = ("ko", "en", "es", "fr")
 LANGUAGE_NAMES = {
     "ko": "Korean",
@@ -210,6 +214,7 @@ class TemplateDialogueGenerator:
         )
 
     @staticmethod
+<<<<<<< HEAD
     def _overlap(goal: str, rng: random.Random, text: dict) -> DialoguePlan:
         return DialoguePlan(
             goal=goal,
@@ -236,6 +241,8 @@ class TemplateDialogueGenerator:
         )
 
     @staticmethod
+=======
+>>>>>>> origin/main
     def _interruption(goal: str, rng: random.Random, text: dict) -> DialoguePlan:
         correction = rng.choice(text["corrections"])
         return DialoguePlan(
@@ -273,6 +280,7 @@ class TemplateDialogueGenerator:
         )
 
     @staticmethod
+<<<<<<< HEAD
     def _barge_in(goal: str, rng: random.Random, text: dict) -> DialoguePlan:
         stop_latency = rng.randint(80, 500)
         return DialoguePlan(
@@ -310,6 +318,10 @@ class TemplateDialogueGenerator:
 
     @staticmethod
     def _hesitation(goal: str, rng: random.Random, text: dict) -> DialoguePlan:
+=======
+    def _pause(goal: str, rng: random.Random, text: dict) -> DialoguePlan:
+        del rng
+>>>>>>> origin/main
         return DialoguePlan(
             goal=goal,
             scenario="mid_utterance_pause",
@@ -318,7 +330,11 @@ class TemplateDialogueGenerator:
                     "e1",
                     "user",
                     text["pause_first"].format(goal=goal),
+<<<<<<< HEAD
                     event_type="hesitation",
+=======
+                    event_type="pause_fragment",
+>>>>>>> origin/main
                     timing=Timing(offset_ms=0),
                     metadata={"expected_action": "continue_listening"},
                 ),
@@ -327,7 +343,11 @@ class TemplateDialogueGenerator:
                     "user",
                     text["pause_second"].format(goal=goal),
                     event_type="pause_fragment",
+<<<<<<< HEAD
                     timing=Timing("e1", "end", rng.randint(350, 1200)),
+=======
+                    timing=Timing("e1", "end", 900),
+>>>>>>> origin/main
                 ),
                 Event(
                     "e3",
@@ -347,13 +367,21 @@ Return only a JSON object. Events are in reference order, and each timing.anchor
   "goal": "string", "scenario": "string", "language": "ko|en|es|fr",
   "events": [{
     "id": "e1", "speaker": "user|assistant", "text": "string",
+<<<<<<< HEAD
     "event_type": "normal|overlap|backchannel|interruption|barge_in|hesitation|pause_fragment|resume",
+=======
+    "event_type": "normal|backchannel|interruption|pause_fragment|resume",
+>>>>>>> origin/main
     "timing": {"anchor_id": null or "earlier event id", "anchor_point": "start|end", "offset_ms": integer},
     "metadata": {"expected_action": "optional string"}
   }]
 }
 Set the first event to anchor_id=null and offset_ms=0. Create overlap with a negative offset from the other event's end.
+<<<<<<< HEAD
 For a backchannel or overlap, the other speaker should continue speaking. For an interruption, the other speaker keeps its full waveform; for barge_in, set stop_latency_ms and the assistant stops. Keep every event short and speakable."""
+=======
+For a backchannel, the other speaker should continue speaking. For an interruption, the other speaker should stop and listen. Keep every event short and speakable."""
+>>>>>>> origin/main
 
 
 @dataclass(slots=True)

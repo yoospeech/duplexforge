@@ -12,7 +12,10 @@ from .audio import (
     overlay,
     write_wav,
 )
+<<<<<<< HEAD
 from .moshi import export_moshi_sample
+=======
+>>>>>>> origin/main
 from .models import DialoguePlan
 
 
@@ -98,6 +101,7 @@ def render_dialogue(
             )
         )
 
+<<<<<<< HEAD
     # A barge-in differs from a normal interruption: the interrupted assistant
     # track is cut after a configurable simulated stop-detection latency.
     for event, item in zip(plan.events, rendered):
@@ -119,6 +123,8 @@ def render_dialogue(
         target.metadata["barge_in_truncated"] = True
         interval_by_id[target_id] = (target.start_ms, stop_ms)
 
+=======
+>>>>>>> origin/main
     assert sample_rate is not None
     duration_ms = max(item.end_ms for item in rendered) + 200
     tracks = {
@@ -131,9 +137,12 @@ def render_dialogue(
     write_wav(output_dir / "user.wav", tracks["user"])
     write_wav(output_dir / "assistant.wav", tracks["assistant"])
     write_wav(output_dir / "mixed.wav", combine(tracks["user"], tracks["assistant"]))
+<<<<<<< HEAD
     moshi_wav, _ = export_moshi_sample(
         output_dir, tracks["assistant"], tracks["user"], rendered
     )
+=======
+>>>>>>> origin/main
 
     result = RenderResult(duration_ms, rendered, sample_rate)
     if not keep_event_audio:
@@ -154,7 +163,10 @@ def render_dialogue(
             "user": "user.wav",
             "assistant": "assistant.wav",
             "mixed": "mixed.wav",
+<<<<<<< HEAD
             "moshi_stereo": moshi_wav.name,
+=======
+>>>>>>> origin/main
         },
         "events": [asdict(item) for item in rendered],
         "metadata": {**plan.metadata, "tts": synthesizer.name},

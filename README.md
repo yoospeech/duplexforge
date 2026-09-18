@@ -12,7 +12,11 @@ Objective
           ↓
        Per-speaker TTS
           ↓
+<<<<<<< HEAD
  user.wav + assistant.wav + mixed.wav + Moshi stereo WAV + timestamps
+=======
+ user.wav + assistant.wav + mixed.wav + timestamp metadata.json
+>>>>>>> origin/main
 ```
 
 A `turn` in DuplexForge is a timeline event, not merely an item in an ordered array. Each event is positioned relative to the start or end of an earlier event. Negative offsets create real cross-speaker overlap.
@@ -27,8 +31,11 @@ A `turn` in DuplexForge is a timeline event, not merely an item in an ordered ar
 - Normal turns, backchannels, interruptions, pauses, and resumptions
 - Separate user and assistant tracks plus a mixed full-duplex track
 - Timestamped JSON metadata, transcripts, and JSONL manifests
+<<<<<<< HEAD
 - Current `moshi-finetune` export: assistant-left/user-right stereo WAV,
   adjacent alignment JSON, and `moshi.jsonl`
+=======
+>>>>>>> origin/main
 - Dataset validation for audio format, event timing, and speaker overlap
 
 ## Quick start
@@ -80,11 +87,15 @@ duplexforge generate \
 
 If FlashAttention is installed and supported by the GPU, pass `--qwen-tts-attention flash_attention_2`. The default `auto` mode works without compiling FlashAttention.
 
+<<<<<<< HEAD
 For Qwen3-TTS, DuplexForge creates a different reproducible user persona for
 each sample while keeping one assistant VoiceDesign identity fixed across the
 entire dataset run. Pass `--assistant-voice "..."` to define that fixed target
 voice explicitly. Descriptions and model identifiers are stored in
 `metadata.json` for reproducibility.
+=======
+For every sample, DuplexForge creates distinct user and assistant VoiceDesign descriptions from the selected seed. The descriptions and model identifier are stored in `metadata.json` for reproducibility.
+>>>>>>> origin/main
 
 ## Qwen3-TTS with TensorRT Edge-LLM
 
@@ -220,8 +231,11 @@ outputs/cafe/
     ├── user.wav
     ├── assistant.wav
     ├── mixed.wav
+<<<<<<< HEAD
     ├── moshi.wav
     ├── moshi.json
+=======
+>>>>>>> origin/main
     ├── metadata.json
     ├── transcript.txt
     └── events/
@@ -265,6 +279,7 @@ Validate WAV formats, track lengths, event ranges, and cross-speaker overlap aft
 duplexforge validate outputs/cafe
 ```
 
+<<<<<<< HEAD
 The validator also prints total hours, turn duration, response latency, overlap
 ratio, and interruption/barge-in/backchannel counts. `moshi.jsonl` is directly
 shaped for the current `moshi-finetune` loader. Its paths are absolute so the
@@ -276,6 +291,8 @@ For the conservative Korean LoRA recipe and known tokenizer/alignment caveats,
 see `configs/korean_moshi_finetune.yaml` and
 `docs/KOREAN_MOSHI_FINETUNING.md`.
 
+=======
+>>>>>>> origin/main
 ## Dialogue patterns
 
 ```bash
@@ -289,9 +306,13 @@ duplexforge generate \
 - `normal`: sequential question and answer
 - `backchannel`: a short listener response while the other speaker continues
 - `interruption`: a semantic interruption that should make the other speaker stop
+<<<<<<< HEAD
 - `overlap`: both waveforms continue during cooperative overlap
 - `barge_in`: user overlap followed by assistant truncation after stop latency
 - `hesitation`: a mid-utterance false end during which the listener keeps waiting
+=======
+- `pause`: a long mid-utterance pause during which the listener should keep waiting
+>>>>>>> origin/main
 
 ## Tests
 
@@ -299,9 +320,13 @@ duplexforge generate \
 python -m unittest discover -s tests -v
 ```
 
+<<<<<<< HEAD
 The current exporter approximates word boundaries inside each synthesized
 utterance because the integrated TTS APIs do not return alignments. Production
 training should add forced alignment or use backend-native word timestamps.
 Planned improvements include VAP/Easy-Turn quality filtering, room impulse
 response and background-noise augmentation, and larger licensed reference-voice
 banks. See `docs/references.md` for open-source projects and license notes.
+=======
+The current MVP focuses on data generation and timeline rendering. Planned improvements include word-level alignment, VAP/Easy-Turn quality filtering, room impulse response and background-noise augmentation, and larger licensed reference-voice banks. See `docs/references.md` for open-source projects and license notes.
+>>>>>>> origin/main

@@ -22,12 +22,20 @@
     "sample_rate": { "type": "integer", "minimum": 8000 },
     "audio": {
       "type": "object",
+<<<<<<< HEAD
       "required": ["user", "assistant", "mixed", "moshi_stereo"],
       "properties": {
         "user": { "type": "string" },
         "assistant": { "type": "string" },
         "mixed": { "type": "string" },
         "moshi_stereo": { "type": "string" }
+=======
+      "required": ["user", "assistant", "mixed"],
+      "properties": {
+        "user": { "type": "string" },
+        "assistant": { "type": "string" },
+        "mixed": { "type": "string" }
+>>>>>>> origin/main
       }
     },
     "events": {
@@ -51,11 +59,16 @@
           "event_type": {
             "enum": [
               "normal",
+<<<<<<< HEAD
               "overlap",
               "backchannel",
               "interruption",
               "barge_in",
               "hesitation",
+=======
+              "backchannel",
+              "interruption",
+>>>>>>> origin/main
               "pause_fragment",
               "resume"
             ]

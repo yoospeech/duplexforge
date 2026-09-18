@@ -26,6 +26,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="대화 언어: ko(한국어), en(영어), es(스페인어), fr(프랑스어)",
     )
     generate.add_argument("--output", type=Path, required=True, help="출력 디렉터리")
+<<<<<<< HEAD
     amount = generate.add_mutually_exclusive_group(required=True)
     amount.add_argument("--target-hours", type=float, help="누적 대화 시간 목표")
     amount.add_argument(
@@ -38,6 +39,13 @@ def build_parser() -> argparse.ArgumentParser:
             f"쉼표로 구분한 고정 순환 패턴: {','.join(PATTERNS)}. "
             "미지정 시 configs/default.yaml과 같은 기본 확률 분포 사용"
         ),
+=======
+    generate.add_argument("--count", type=int, default=4, help="생성할 대화 수")
+    generate.add_argument(
+        "--patterns",
+        default=",".join(PATTERNS),
+        help=f"쉼표로 구분한 패턴: {','.join(PATTERNS)}",
+>>>>>>> origin/main
     )
     generate.add_argument("--seed", type=int, default=42)
     generate.add_argument(
@@ -54,6 +62,7 @@ def build_parser() -> argparse.ArgumentParser:
     generate.add_argument("--base-url", default="http://localhost:8000/v1")
     generate.add_argument("--api-key", help="미지정 시 OPENAI_API_KEY 사용")
     generate.add_argument("--user-voice", help="미지정 시 언어별 기본 화자")
+<<<<<<< HEAD
     generate.add_argument(
         "--assistant-voice",
         help=(
@@ -61,6 +70,9 @@ def build_parser() -> argparse.ArgumentParser:
             "고정할 VoiceDesign instruction"
         ),
     )
+=======
+    generate.add_argument("--assistant-voice", help="미지정 시 언어별 기본 화자")
+>>>>>>> origin/main
     generate.add_argument(
         "--qwen-tts-model",
         default="Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
@@ -114,7 +126,10 @@ def main(argv: list[str] | None = None) -> int:
                 output_dir=args.output,
                 language=args.language,
                 count=args.count,
+<<<<<<< HEAD
                 target_duration_hours=args.target_hours,
+=======
+>>>>>>> origin/main
                 patterns=patterns,
                 seed=args.seed,
                 dialogue_backend=args.dialogue_backend,
@@ -136,7 +151,11 @@ def main(argv: list[str] | None = None) -> int:
             records = generate_dataset(config)
             total_ms = sum(record["duration_ms"] for record in records)
             print(
+<<<<<<< HEAD
                 f"생성 완료: {len(records)}개, {total_ms / 3_600_000:.4f}시간, "
+=======
+                f"생성 완료: {len(records)}개, {total_ms / 1000:.1f}초, "
+>>>>>>> origin/main
                 f"{args.output.resolve()}"
             )
             return 0
@@ -154,8 +173,11 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "validate":
             report = validate_dataset(args.dataset)
+<<<<<<< HEAD
             if report.statistics:
                 print(json.dumps(report.statistics, ensure_ascii=False, indent=2))
+=======
+>>>>>>> origin/main
             if report.ok:
                 print(f"검증 통과: {report.sample_count}개 샘플")
                 return 0

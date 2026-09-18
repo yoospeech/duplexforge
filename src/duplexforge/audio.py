@@ -129,6 +129,7 @@ def write_wav(path: Path, audio: AudioBuffer) -> None:
         wav.writeframes(audio.samples.tobytes())
 
 
+<<<<<<< HEAD
 def write_stereo_wav(path: Path, left: AudioBuffer, right: AudioBuffer) -> None:
     """Write sample-aligned PCM16 stereo (left then right)."""
     if left.sample_rate != right.sample_rate:
@@ -146,6 +147,8 @@ def write_stereo_wav(path: Path, left: AudioBuffer, right: AudioBuffer) -> None:
         wav.writeframes(interleaved.tobytes())
 
 
+=======
+>>>>>>> origin/main
 def empty_audio(duration_ms: int, sample_rate: int) -> AudioBuffer:
     length = max(0, round(duration_ms * sample_rate / 1000))
     return AudioBuffer(array("h", [0]) * length, sample_rate)
