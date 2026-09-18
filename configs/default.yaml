@@ -1,0 +1,23 @@
+# Duplex timeline policy. These are generation-policy defaults and are kept in
+# configuration so production dialogue generators can sample them explicitly.
+timeline:
+  normal_turn_probability: 0.45
+  overlap_probability: 0.10
+  interruption_probability: 0.15
+  barge_in_probability: 0.10
+  backchannel_probability: 0.10
+  hesitation_probability: 0.10
+  response_latency_ms: {min: 100, max: 800}
+  interruption_position: {min_ratio: 0.25, max_ratio: 0.85}
+  barge_in_stop_latency_ms: {min: 80, max: 500}
+  hesitation_pause_ms: {min: 350, max: 1200}
+backchannels:
+  ko: ["네", "응", "아", "맞아요", "그렇군요", "음", "아하"]
+audio:
+  sample_rate: 24000
+  moshi_channels: {left: assistant, right: user}
+augmentation:
+  enabled: false
+  noise_probability: 0.0
+  room_probability: 0.0
+  speed_probability: 0.0

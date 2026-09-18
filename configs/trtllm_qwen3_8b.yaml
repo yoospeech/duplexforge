@@ -1,0 +1,8 @@
+# High-throughput dialogue generation defaults for trtllm-serve.
+# Reduce max_batch_size/max_num_tokens if GPU memory is insufficient.
+max_batch_size: 64
+max_num_tokens: 8192
+kv_cache_config:
+  free_gpu_memory_fraction: 0.85
+cuda_graph_config:
+  enable_padding: true
