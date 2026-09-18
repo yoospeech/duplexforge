@@ -7,16 +7,11 @@ from typing import Any, Literal
 Speaker = Literal["user", "assistant"]
 EventType = Literal[
     "normal",
-<<<<<<< HEAD
     "overlap",
     "backchannel",
     "interruption",
     "barge_in",
     "hesitation",
-=======
-    "backchannel",
-    "interruption",
->>>>>>> origin/main
     "pause_fragment",
     "resume",
 ]
@@ -85,16 +80,11 @@ class DialoguePlan:
         valid_speakers = {"user", "assistant"}
         valid_types = {
             "normal",
-<<<<<<< HEAD
             "overlap",
             "backchannel",
             "interruption",
             "barge_in",
             "hesitation",
-=======
-            "backchannel",
-            "interruption",
->>>>>>> origin/main
             "pause_fragment",
             "resume",
         }
@@ -137,7 +127,3 @@ class DialoguePlan:
         )
         plan.validate()
         return plan
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/main

@@ -6,7 +6,3 @@ kv_cache_config:
   free_gpu_memory_fraction: 0.85
 cuda_graph_config:
   enable_padding: true
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/main

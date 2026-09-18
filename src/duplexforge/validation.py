@@ -2,10 +2,7 @@ from __future__ import annotations
 
 import json
 import wave
-<<<<<<< HEAD
 from array import array
-=======
->>>>>>> origin/main
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -20,10 +17,7 @@ class ValidationIssue:
 class ValidationReport:
     sample_count: int
     issues: list[ValidationIssue]
-<<<<<<< HEAD
     statistics: dict[str, float | int] | None = None
-=======
->>>>>>> origin/main
 
     @property
     def ok(self) -> bool:
@@ -51,10 +45,7 @@ def validate_dataset(dataset_dir: Path) -> ValidationReport:
                 ValidationIssue("dataset", f"invalid manifest line {line_number}: {exc}")
             )
 
-<<<<<<< HEAD
     all_metadata: list[dict] = []
-=======
->>>>>>> origin/main
     for record in records:
         sample_id = str(record.get("id", "unknown"))
         metadata_path = dataset_dir / str(record.get("metadata_path", ""))
@@ -67,17 +58,11 @@ def validate_dataset(dataset_dir: Path) -> ValidationReport:
             issues.append(ValidationIssue(sample_id, f"cannot read metadata: {exc}"))
             continue
         sample_dir = metadata_path.parent
-<<<<<<< HEAD
         all_metadata.append(metadata)
         _validate_audio(sample_id, sample_dir, metadata, issues)
         _validate_events(sample_id, metadata, issues)
         _validate_moshi_export(sample_id, sample_dir, metadata, issues)
     return ValidationReport(len(records), issues, _statistics(all_metadata))
-=======
-        _validate_audio(sample_id, sample_dir, metadata, issues)
-        _validate_events(sample_id, metadata, issues)
-    return ValidationReport(len(records), issues)
->>>>>>> origin/main
 
 
 def _validate_audio(
@@ -136,11 +121,7 @@ def _validate_events(
             issues.append(
                 ValidationIssue(sample_id, f"event {event_id} exceeds dialogue duration")
             )
-<<<<<<< HEAD
         if event.get("event_type") in {"backchannel", "interruption", "overlap", "barge_in"}:
-=======
-        if event.get("event_type") in {"backchannel", "interruption"}:
->>>>>>> origin/main
             overlaps_opposite = any(
                 other.get("speaker") != event.get("speaker")
                 and other.get("start_ms", 0) < end
@@ -156,7 +137,6 @@ def _validate_events(
                     )
                 )
 
-<<<<<<< HEAD
 
 def _validate_moshi_export(
     sample_id: str, sample_dir: Path, metadata: dict, issues: list[ValidationIssue]
@@ -233,5 +213,3 @@ def _statistics(metadata_items: list[dict]) -> dict[str, float | int]:
         result[f"{event_type}_count"] = number
         result[f"{event_type}_rate"] = round(number / count, 6) if count else 0
     return result
-=======
->>>>>>> origin/main

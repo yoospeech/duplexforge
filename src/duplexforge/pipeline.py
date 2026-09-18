@@ -3,12 +3,8 @@ from __future__ import annotations
 import json
 import os
 import random
-<<<<<<< HEAD
 import sys
 from dataclasses import dataclass, field
-=======
-from dataclasses import dataclass
->>>>>>> origin/main
 from pathlib import Path
 
 from .audio import (
@@ -35,7 +31,6 @@ class GenerationConfig:
     goal: str
     output_dir: Path
     language: str = "ko"
-<<<<<<< HEAD
     count: int | None = 4
     target_duration_hours: float | None = None
     patterns: tuple[str, ...] = ()
@@ -49,10 +44,6 @@ class GenerationConfig:
             "hesitation": 0.10,
         }
     )
-=======
-    count: int = 4
-    patterns: tuple[str, ...] = PATTERNS
->>>>>>> origin/main
     seed: int = 42
     dialogue_backend: str = "trtllm"
     tts_backend: str = "qwen3"
@@ -73,17 +64,12 @@ class GenerationConfig:
     def validate(self) -> None:
         if not self.goal.strip():
             raise ValueError("goal must not be empty")
-<<<<<<< HEAD
         if self.count is not None and self.count < 1:
             raise ValueError("count must be at least 1")
         if self.target_duration_hours is not None and self.target_duration_hours <= 0:
             raise ValueError("target_duration_hours must be positive")
         if self.count is None and self.target_duration_hours is None:
             raise ValueError("count or target_duration_hours is required")
-=======
-        if self.count < 1:
-            raise ValueError("count must be at least 1")
->>>>>>> origin/main
         if self.language not in LANGUAGES:
             raise ValueError(
                 f"unsupported language: {self.language}; choose from {', '.join(LANGUAGES)}"
@@ -91,14 +77,11 @@ class GenerationConfig:
         unknown = set(self.patterns) - set(PATTERNS)
         if unknown:
             raise ValueError(f"unknown patterns: {', '.join(sorted(unknown))}")
-<<<<<<< HEAD
         unknown_weights = set(self.pattern_weights) - set(PATTERNS)
         if unknown_weights or any(value < 0 for value in self.pattern_weights.values()):
             raise ValueError("pattern weights must be non-negative known patterns")
         if not self.patterns and sum(self.pattern_weights.values()) <= 0:
             raise ValueError("at least one pattern weight must be positive")
-=======
->>>>>>> origin/main
         if self.dialogue_backend not in {"template", "openai", "trtllm"}:
             raise ValueError(f"unknown dialogue backend: {self.dialogue_backend}")
         if self.tts_backend not in {"tone", "edge", "qwen3", "qwen3-edgellm"}:
@@ -113,7 +96,6 @@ def generate_dataset(config: GenerationConfig) -> list[dict]:
     generator = _make_dialogue_generator(config)
     rng = random.Random(config.seed)
     records: list[dict] = []
-<<<<<<< HEAD
     manifest = config.output_dir / "manifest.jsonl"
     if config.target_duration_hours is not None and manifest.exists():
         records = [
@@ -146,13 +128,6 @@ def generate_dataset(config: GenerationConfig) -> list[dict]:
             )[0]
         sample_id = f"sample_{index:06d}"
         plan = _generate_valid_plan(generator, config.goal, pattern, index)
-=======
-
-    for index in range(config.count):
-        pattern = config.patterns[index % len(config.patterns)]
-        sample_id = f"sample_{index:06d}"
-        plan = generator.generate(config.goal, pattern, index)
->>>>>>> origin/main
         plan.metadata["sample_id"] = sample_id
         plan.metadata["seed"] = config.seed
         synthesizer, voices = _make_synthesizer(config, index)
@@ -178,7 +153,6 @@ def generate_dataset(config: GenerationConfig) -> list[dict]:
             "mixed_audio_path": f"{sample_id}/mixed.wav",
             "user_audio_path": f"{sample_id}/user.wav",
             "assistant_audio_path": f"{sample_id}/assistant.wav",
-<<<<<<< HEAD
             "path": str((sample_dir / "moshi.wav").resolve()),
             "duration": result.duration_ms / 1000,
             "split": "train" if rng.random() < 0.9 else "validation",
@@ -200,22 +174,6 @@ def generate_dataset(config: GenerationConfig) -> list[dict]:
         "actual_duration_hours": total_duration_ms / 3_600_000,
         "patterns": list(config.patterns) if config.patterns else None,
         "pattern_weights": config.pattern_weights,
-=======
-            "split": "train" if rng.random() < 0.9 else "validation",
-        }
-        records.append(record)
-
-    manifest = config.output_dir / "manifest.jsonl"
-    manifest.write_text(
-        "".join(json.dumps(item, ensure_ascii=False) + "\n" for item in records),
-        encoding="utf-8",
-    )
-    run_config = {
-        "goal": config.goal,
-        "language": config.language,
-        "count": config.count,
-        "patterns": list(config.patterns),
->>>>>>> origin/main
         "seed": config.seed,
         "dialogue_backend": config.dialogue_backend,
         "tts_backend": config.tts_backend,
@@ -237,10 +195,16 @@ def generate_dataset(config: GenerationConfig) -> list[dict]:
     return records
 
 
-<<<<<<< HEAD
 def _write_manifests(output_dir: Path, records: list[dict]) -> None:
     (output_dir / "manifest.jsonl").write_text(
         "".join(json.dumps(item, ensure_ascii=False) + "\n" for item in records),
+        encoding="utf-8",
+    )
+    (output_dir / "moshi.jsonl").write_text(
+        "".join(
+            json.dumps({"path": item["path"], "duration": item["duration"]}) + "\n"
+            for item in records
+        ),
         encoding="utf-8",
     )
 
@@ -272,17 +236,8 @@ def _generate_valid_plan(
         f"failed to create a valid dialogue plan for sample_{index:06d} "
         f"after {max_attempts} attempts: {last_error}"
     ) from last_error
-    (output_dir / "moshi.jsonl").write_text(
-        "".join(
-            json.dumps({"path": item["path"], "duration": item["duration"]}) + "\n"
-            for item in records
-        ),
-        encoding="utf-8",
-    )
 
 
-=======
->>>>>>> origin/main
 def _make_dialogue_generator(config: GenerationConfig) -> DialogueGenerator:
     if config.dialogue_backend == "template":
         return TemplateDialogueGenerator(seed=config.seed, language=config.language)
@@ -398,11 +353,7 @@ def _profile_dict(profile: VoiceProfile) -> dict[str, str]:
 
 
 def _select_qwen3_voices(config: GenerationConfig, index: int) -> tuple[dict, dict]:
-<<<<<<< HEAD
     """Create a diverse user and one dataset-stable assistant persona."""
-=======
-    """Create two distinct and reproducible VoiceDesign personas per sample."""
->>>>>>> origin/main
 
     genders = ("female", "male")
     ages = ("young adult", "adult", "middle-aged", "older adult")
@@ -430,7 +381,6 @@ def _select_qwen3_voices(config: GenerationConfig, index: int) -> tuple[dict, di
         }
 
     user = make("user", 0)
-<<<<<<< HEAD
     if config.assistant_voice:
         assistant = {
             "id": f"qwen3-vd-{config.language}-assistant-fixed",
@@ -459,7 +409,4 @@ def _select_qwen3_voices(config: GenerationConfig, index: int) -> tuple[dict, di
             ),
             "model": config.qwen_tts_model,
         }
-=======
-    assistant = make("assistant", 1)
->>>>>>> origin/main
     return user, assistant

@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-<<<<<<< HEAD
 project_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-=======
->>>>>>> origin/main
 model_id="${TRTLLM_MODEL:-nvidia/Qwen3-8B-FP8}"
 server_host="${TRTLLM_HOST:-0.0.0.0}"
 server_port="${TRTLLM_PORT:-8000}"
 config_path="${TRTLLM_CONFIG:-configs/trtllm_qwen3_8b.yaml}"
-<<<<<<< HEAD
 runtime="${TRTLLM_RUNTIME:-auto}"
 image="${TRTLLM_IMAGE:-nvcr.io/nvidia/tensorrt-llm/release:1.3.0rc13}"
 
@@ -64,11 +60,3 @@ exec docker run --rm \
     --host "${server_host}" \
     --port "${server_port}" \
     --config "${config_path}"
-=======
-
-exec trtllm-serve "${model_id}" \
-  --host "${server_host}" \
-  --port "${server_port}" \
-  --config "${config_path}"
-
->>>>>>> origin/main

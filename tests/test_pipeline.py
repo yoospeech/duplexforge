@@ -6,10 +6,7 @@ from pathlib import Path
 
 from duplexforge.audio import EDGE_VOICE_POOLS
 from duplexforge.pipeline import GenerationConfig, _select_voices, generate_dataset
-<<<<<<< HEAD
 from duplexforge.pipeline import _select_qwen3_voices
-=======
->>>>>>> origin/main
 
 
 class PipelineTests(unittest.TestCase):
@@ -41,7 +38,6 @@ class PipelineTests(unittest.TestCase):
                         self.assertEqual(wav.getnchannels(), 1)
                         self.assertEqual(wav.getsampwidth(), 2)
                         self.assertGreater(wav.getnframes(), 0)
-<<<<<<< HEAD
                 with wave.open(str(sample / "moshi.wav"), "rb") as wav:
                     self.assertEqual(wav.getnchannels(), 2)
                     self.assertEqual(wav.getframerate(), 24000)
@@ -83,8 +79,6 @@ class PipelineTests(unittest.TestCase):
                 assistant["end_ms"],
                 barge_in["start_ms"] + barge_in["metadata"]["stop_latency_ms"],
             )
-=======
->>>>>>> origin/main
 
     def test_interruption_is_rendered_as_overlap(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -169,7 +163,6 @@ class PipelineTests(unittest.TestCase):
             self.assertTrue(all(user.id != assistant.id for user, assistant in pairs))
             self.assertEqual(pairs, [_select_voices(config, i) for i in range(len(pool))])
 
-<<<<<<< HEAD
     def test_qwen_assistant_is_fixed_while_users_vary(self):
         config = GenerationConfig(goal="test", output_dir=Path("unused"))
         first = _select_qwen3_voices(config, 0)
@@ -200,8 +193,6 @@ class PipelineTests(unittest.TestCase):
             second = generate_dataset(config)
             self.assertEqual(first, second)
 
-=======
->>>>>>> origin/main
 
 if __name__ == "__main__":
     unittest.main()
