@@ -5,7 +5,9 @@ __pycache__/
 .venv/
 .venv-tts/
 .venv-moshi/
-third_party/
+third_party/*
+!third_party/moshi/
+!third_party/moshi-finetune/
 .cache/
 dist/
 build/

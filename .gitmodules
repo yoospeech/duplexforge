@@ -1,0 +1,6 @@
+[submodule "third_party/moshi"]
+	path = third_party/moshi
+	url = https://github.com/kyutai-labs/moshi.git
+[submodule "third_party/moshi-finetune"]
+	path = third_party/moshi-finetune
+	url = https://github.com/kyutai-labs/moshi-finetune.git

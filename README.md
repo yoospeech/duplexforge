@@ -130,6 +130,21 @@ PYTHONPATH=src python -m duplexforge inspect \
 
 ## Moshi fine-tuning
 
+Moshi and `moshi-finetune` are pinned as Git submodules. After cloning
+DuplexForge, initialize them and apply the project-specific GB10 dependency
+and Korean vocabulary patches:
+
+```bash
+git submodule update --init --recursive
+bash scripts/apply_moshi_finetune_korean_vocab_patch.sh
+```
+
+The script can be rerun; it skips patches already present in a checkout.
+The tokenizer and model configuration under `models/korean_moshiko_tokenizer/`
+are generated locally and are not committed. Rebuild them from the dataset
+using `scripts/build_korean_moshi_tokenizer.py` before running the extended
+vocabulary training configs on a fresh machine.
+
 Point the training configuration at generated JSONL files:
 
 ```yaml
